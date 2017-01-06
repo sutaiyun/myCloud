@@ -17,8 +17,8 @@
     </properties>
 
     <build>
-        <sourceDirectory>../src</sourceDirectory>
-        <outputDirectory>${output.root}</outputDirectory>
+        <sourceDirectory>../src/main/java/myCloud/work</sourceDirectory>
+        <outputDirectory>${output.root}/work</outputDirectory>
         <directory>${work.target}</directory>
         <plugins>
         <plugin>

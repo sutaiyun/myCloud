@@ -17,8 +17,8 @@
     </properties>
 
     <build>
-    <sourceDirectory>../src</sourceDirectory>
-    <outputDirectory>${output.root}</outputDirectory>
+    <sourceDirectory>../src/main/java/myCloud/common</sourceDirectory>
+    <outputDirectory>${output.root}/common</outputDirectory>
     <directory>${common.target}</directory>
     </build>
 
