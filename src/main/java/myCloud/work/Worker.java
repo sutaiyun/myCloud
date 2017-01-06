@@ -1,5 +1,7 @@
 package myCloud.work;
 
+import myCloud.common.CmdShell;
+
 /**
  * Created by sutaiyun on 2017/1/6.
  */
@@ -15,5 +17,8 @@ public class Worker {
         System.out.println("**                                    **");
         System.out.println("****************************************");
         System.out.println("");
+
+        CmdShell cmdShell = new CmdShell();
+        cmdShell.Start();
     }
 }
