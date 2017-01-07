@@ -44,9 +44,16 @@
         <base.dir>${env}</base.dir>
         <target.root>${base.dir}/target</target.root>
         <output.root>${target.root}/classes</output.root>
+        <log4j.version>2.7</log4j.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>

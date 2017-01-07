@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- the min value is 5 second for monitorInterval -->
+<Configuration status="TRACE" monitorInterval="5">
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n" />
+        </Console>
+
+        <RollingFile name="DAILY_FILE" fileName="./log/log.work" filePattern="./log/log.work-%d{yyyyMMdd}-%i.gz">
+            <PatternLayout>
+                <pattern>%d{yyyyMMdd HHmmss.SSS} [%t] %p %c{4.}#%M(%L) %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="1 GB" />
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+
+        <RollingFile name="ERROR_FILE" fileName="./log/log.work.error" filePattern="./log/log.work.error-%d{yyyyMMdd}-%i.gz">
+            <PatternLayout>
+                <pattern>%d{yyyyMMdd HHmmss.SSS} [%t] %p %c#%M(%L) %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="1 GB" />
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+
+        <RollingFile name="RAW_FILE" fileName="./log/log.raw" filePattern="./log/log.raw-%d{yyyyMMdd}-%i.gz">
+            <PatternLayout><pattern>%m%n</pattern></PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="1 GB" />
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+
+        <RollingFile name="CMD_SHELL_FILE" fileName="./log/log.cmd" filePattern="./log/log.cmd-%d{yyyyMMdd}.gz">
+            <PatternLayout>
+                <pattern>
+                    %d{yyyyMMdd HHmmss.SSS} %m<![CDATA[<br>]]>%n
+                </pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+        </RollingFile>
+     </Appenders>
+
+
+    <Loggers>
+        <!-- levels : OFF,FATAL,ERROR,WARN,INFO,DEBUG,TRACE,ALL -->
+        <!-- includeLocation="true" is only for debug -->
+        <Logger name="myCloud" level="ALL" additivity="false" includeLocation="true">
+            <appender-ref ref="CONSOLE" level="ALL" />
+            <appender-ref ref="DAILY_FILE" level="TRACE" />
+            <appender-ref ref="ERROR_FILE" level="ERROR" />
+        </Logger>
+
+        <Logger name="CmdShell" level="DEBUG" additivity="false" includeLocation="false">
+            <appender-ref ref="CMD_SHELL_FILE" level="DEBUG" />
+        </Logger>
+
+        <Logger name="myCloud.work.WorkSystem" level="ALL" additivity="false">
+            <AppenderRef ref="RAW_FILE" />
+        </Logger>
+        
+        <Root level="DEBUG" includeLocation="false">
+            <AppenderRef ref="CONSOLE" level="ALL" />
+        </Root>
+    </Loggers>
+
+</Configuration>
