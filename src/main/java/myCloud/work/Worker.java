@@ -11,7 +11,24 @@ public class Worker {
     private static final Logger log = LogManager.getLogger(Worker.class);
 
     public static void main(String args[]) {
-        log.info("Work start ..........................................");
+        try {
+            log.info("Work start ..........................................");
+
+            hello();
+            CmdShell cmdShell = new CmdShell();
+            cmdShell.Start();
+
+            log.info("Work Stop ..........................................");
+        } catch (Exception e) {
+            String errorString = new StringBuffer().append("** Start work ERROR!").append(e).toString();
+            log.error(errorString);
+            System.exit(1);
+        } finally {
+            System.exit(0);
+        }
+    }
+
+    private static void hello() {
         System.out.print("This is Worker main!!!!!!");
         System.out.println("");
         System.out.println("****************************************");
@@ -22,10 +39,5 @@ public class Worker {
         System.out.println("**                                    **");
         System.out.println("****************************************");
         System.out.println("");
-
-
-        CmdShell cmdShell = new CmdShell();
-        cmdShell.Start();
-        log.info("Work Stop ..........................................");
     }
 }

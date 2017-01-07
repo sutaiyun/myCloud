@@ -28,3 +28,6 @@
 
         http://logging.apache.org/log4j/2.x/manual/configuration.html     log4j  configuration
 
+### libs
+###### Guava: Google Core Libraries for Java
+https://github.com/google/guava
