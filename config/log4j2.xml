@@ -67,6 +67,7 @@
 
         <Logger name="myCloud.work.WorkSystem" level="ALL" additivity="false">
             <AppenderRef ref="RAW_FILE" />
+            <AppenderRef ref="CONSOLE" />
         </Logger>
         
         <Root level="DEBUG" includeLocation="false">

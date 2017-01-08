@@ -29,5 +29,19 @@
         http://logging.apache.org/log4j/2.x/manual/configuration.html     log4j  configuration
 
 ### libs
+###### java doc
+http://docs.oracle.com/javase/6/docs/api/java/security/MessageDigest.html
+http://docs.oracle.com/javase/8/
+
 ###### Guava: Google Core Libraries for Java
 https://github.com/google/guava
+###### MessageDigest简介 (为应用程序提供信息摘要算法的功能，如 MD5 或 SHA 算法。简单点说就是用于生成散列码)
+http://hubingforever.blog.163.com/blog/static/171040579201210781650340/
+http://docs.oracle.com/javase/6/docs/api/java/security/MessageDigest.html
+###### Binary Encoders   (base32, base64, Hex, BinaryCodec...MessageDigest.:)
+http://commons.apache.org/proper/commons-codec/userguide.html
+
+http://xerces.apache.org/xerces-j/apiDocs/org/apache/xerces/utils/HexBin.html   (或者使用apache的code库）
+java.lang.Object
+  |
+  +--org.apache.xerces.utils.HexBin

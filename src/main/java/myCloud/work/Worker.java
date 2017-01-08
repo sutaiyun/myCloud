@@ -1,6 +1,6 @@
 package myCloud.work;
 
-import myCloud.common.CmdShell;
+import myCloud.common.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,13 +12,12 @@ public class Worker {
 
     public static void main(String args[]) {
         try {
-            log.info("Work start ..........................................");
+            WorkSystem.instance.Start();
 
-            hello();
             CmdShell cmdShell = new CmdShell();
             cmdShell.Start();
 
-            log.info("Work Stop ..........................................");
+            WorkSystem.instance.Stop();
         } catch (Exception e) {
             String errorString = new StringBuffer().append("** Start work ERROR!").append(e).toString();
             log.error(errorString);
@@ -26,18 +25,5 @@ public class Worker {
         } finally {
             System.exit(0);
         }
-    }
-
-    private static void hello() {
-        System.out.print("This is Worker main!!!!!!");
-        System.out.println("");
-        System.out.println("****************************************");
-        System.out.println("**                                    **");
-        System.out.println("**                                    **");
-        System.out.println("**               Note:                **");
-        System.out.println("**         Shutdown: cmd: exit!       **");
-        System.out.println("**                                    **");
-        System.out.println("****************************************");
-        System.out.println("");
     }
 }
