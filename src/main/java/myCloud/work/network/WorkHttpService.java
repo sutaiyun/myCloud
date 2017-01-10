@@ -1,6 +1,7 @@
 package myCloud.work.network;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -56,7 +57,7 @@ public class WorkHttpService {
             pipeline.addLast("http-decoder", new HttpRequestDecoder());
 
             //把多个消息转化成一个消息(FullHttpRequest或者FullHttpResponse),原因是HTTP解码器在每个HTTP消息中会生成多个消息对象。
-            pipeline.addLast("http-aggregator", new HttpObjectAggregator(65536));
+            //pipeline.addLast("http-aggregator", new HttpObjectAggregator(65536));
 
             pipeline.addLast("http-encoder", new HttpResponseEncoder());
 
@@ -64,9 +65,73 @@ public class WorkHttpService {
             pipeline.addLast("http-chunked", new ChunkedWriteHandler());
 
             //这个是我们自定义的，处理文件服务器逻辑。主要功能还是在这个文件中
-            pipeline.addLast("http-fileServerHandler", new HttpFileServerHandler("/fortest"));
+            //pipeline.addLast("http-fileServerHandler", new HttpFileServerHandler("/fortest"));
+            pipeline.addLast("SimpleHttpServer", new SimpleHttpServerHandler());
 
             log.info("WorkHttpHandler.initChannel are OK!!!!!!");
+        }
+    }
+
+    private class SimpleHttpServerHandler extends SimpleChannelInboundHandler<Object> {
+        HttpRequest request;
+
+        @Override
+        public void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
+            log.info("channelRead: -------- -------- -------- --------");
+            if (msg instanceof HttpRequest) {
+                request = (HttpRequest) msg;
+
+                String uri = request.getUri();
+                log.info("channelRead: Uri:" + uri);
+            }
+            if (msg instanceof HttpContent) {
+                HttpContent content = (HttpContent) msg;
+                ByteBuf buf = content.content();
+                log.info(buf.toString(io.netty.util.CharsetUtil.UTF_8));
+                buf.release();
+
+                String res = "I am OK";
+                FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
+                        OK, Unpooled.wrappedBuffer(res.getBytes("UTF-8")));
+                response.headers().set(CONTENT_TYPE, "text/plain");
+                response.headers().set(CONTENT_LENGTH,
+                        response.content().readableBytes());
+                if (HttpHeaders.isKeepAlive(request)) {
+                    response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                }
+                ctx.write(response);
+                ctx.flush();
+            }
+        }
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg)
+                throws Exception {
+            log.info("channelRead: -------- -------- -------- --------");
+            if (msg instanceof HttpRequest) {
+                request = (HttpRequest) msg;
+
+                String uri = request.getUri();
+                log.info("channelRead: Uri:" + uri);
+            }
+            if (msg instanceof HttpContent) {
+                HttpContent content = (HttpContent) msg;
+                ByteBuf buf = content.content();
+                log.info(buf.toString(io.netty.util.CharsetUtil.UTF_8));
+                buf.release();
+
+                String res = "I am OK";
+                FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
+                        OK, Unpooled.wrappedBuffer(res.getBytes("UTF-8")));
+                response.headers().set(CONTENT_TYPE, "text/plain");
+                response.headers().set(CONTENT_LENGTH,
+                        response.content().readableBytes());
+                if (HttpHeaders.isKeepAlive(request)) {
+                    response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                }
+                ctx.write(response);
+                ctx.flush();
+            }
         }
     }
 
