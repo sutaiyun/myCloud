@@ -3,6 +3,7 @@ package myCloud.work;
 import myCloud.common.MyDigest;
 import myCloud.common.msg.MyMsg;
 import myCloud.work.network.WorkHttpService;
+import myCloud.work.network.WorkWebService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +25,8 @@ public class WorkSystem {
         log.info("{} start ......", workConfig.appName);
 
         initWorkMsgQue();
-        initWorkHttpHandler();
+        //initWorkHttpHandler();
+        initWorkWebServiceHandler();
 
         testSystem();
     }
@@ -51,7 +53,24 @@ public class WorkSystem {
                 }
             }.start();
         } catch (Exception e) {
-            log.error("initWorkHttpHandler error: {}", e);
+            log.error("initWorkHttpService error: {}", e);
+        }
+    }
+
+    private void initWorkWebServiceHandler() {
+        try {
+            new Thread() {
+                public void run () {
+                    try {
+                        WorkWebService service = new WorkWebService();
+                        service.start();
+                    } catch (Exception e) {
+                        log.error("WorkWebServiceHandler error: {}", e);
+                    }
+                }
+            }.start();
+        } catch (Exception e) {
+            log.error("initWorkWebServiceHandler error: {}", e);
         }
     }
 
