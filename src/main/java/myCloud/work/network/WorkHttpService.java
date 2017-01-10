@@ -57,7 +57,7 @@ public class WorkHttpService {
             pipeline.addLast("http-decoder", new HttpRequestDecoder());
 
             //把多个消息转化成一个消息(FullHttpRequest或者FullHttpResponse),原因是HTTP解码器在每个HTTP消息中会生成多个消息对象。
-            //pipeline.addLast("http-aggregator", new HttpObjectAggregator(65536));
+            pipeline.addLast("http-aggregator", new HttpObjectAggregator(65536));
 
             pipeline.addLast("http-encoder", new HttpResponseEncoder());
 
@@ -77,7 +77,26 @@ public class WorkHttpService {
 
         @Override
         public void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
-            log.info("channelRead: -------- -------- -------- --------");
+            log.info("messageReceived: XXXXXXXX XXXXXKXXX XXXXXXXX XXXXXXXX");
+            if (msg instanceof FullHttpRequest) {
+                log.info("req.headers:{}", ((FullHttpRequest) msg).headers());
+                log.info("req.contends:{}", ((FullHttpRequest) msg).content());
+
+                String resMsg = "This is test!!!!!!";
+                FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
+                        OK, Unpooled.wrappedBuffer(resMsg.getBytes("UTF-8")));
+                response.headers().set(CONTENT_TYPE, "text/plain");
+                response.headers().set(CONTENT_LENGTH,
+                        response.content().readableBytes());
+                if (HttpHeaders.isKeepAlive((HttpRequest)msg)) {
+                    response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                }
+                ctx.write(response);
+                ctx.flush();
+            } else  {
+                log.error("HttpFileServerHandler.messageReceived are error: ctx:{} msg:{}", ctx, msg);
+            }
+            /*
             if (msg instanceof HttpRequest) {
                 request = (HttpRequest) msg;
 
@@ -90,7 +109,7 @@ public class WorkHttpService {
                 log.info(buf.toString(io.netty.util.CharsetUtil.UTF_8));
                 buf.release();
 
-                String res = "I am OK";
+                String res = "This is messageReceived!!!!";
                 FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
                         OK, Unpooled.wrappedBuffer(res.getBytes("UTF-8")));
                 response.headers().set(CONTENT_TYPE, "text/plain");
@@ -102,12 +121,13 @@ public class WorkHttpService {
                 ctx.write(response);
                 ctx.flush();
             }
+            */
         }
-
+/*
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg)
                 throws Exception {
-            log.info("channelRead: -------- -------- -------- --------");
+            log.info("channelRead: ******** ******** ******** ********");
             if (msg instanceof HttpRequest) {
                 request = (HttpRequest) msg;
 
@@ -120,7 +140,7 @@ public class WorkHttpService {
                 log.info(buf.toString(io.netty.util.CharsetUtil.UTF_8));
                 buf.release();
 
-                String res = "I am OK";
+                String res = "This is ChannelRead!!!!";
                 FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
                         OK, Unpooled.wrappedBuffer(res.getBytes("UTF-8")));
                 response.headers().set(CONTENT_TYPE, "text/plain");
@@ -133,6 +153,7 @@ public class WorkHttpService {
                 ctx.flush();
             }
         }
+        */
     }
 
     private class HttpFileServerHandler extends SimpleChannelInboundHandler<Object> {
