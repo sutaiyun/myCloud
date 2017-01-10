@@ -1,8 +1,8 @@
 package myCloud.work;
 
-import myCloud.common.AppConfig;
 import myCloud.common.MyDigest;
 import myCloud.common.msg.MyMsg;
+import myCloud.work.network.WorkHttpService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,13 +23,36 @@ public class WorkSystem {
         workConfig.loadAppConfig("/../../config/application.properties");
         log.info("{} start ......", workConfig.appName);
 
+        initWorkMsgQue();
+        initWorkHttpHandler();
+
+        testSystem();
+    }
+
+    private void initWorkMsgQue() {
         WorkMsgQueProcess workMsgQueProcess = new WorkMsgQueProcess();
         try {
             workMsgQueProcess.start();
-        } catch (java.lang.Exception e) {
+        } catch (Exception e) {
             log.error("workMsgQueProcess.start Error. {}", e);
         }
-        testSystem();
+    }
+
+    private void initWorkHttpHandler() {
+        try {
+            new Thread() {
+                public void run () {
+                    try {
+                        WorkHttpService service = new WorkHttpService();
+                        service.start();
+                    } catch (Exception e) {
+                        log.error("WorkHttpService error: {}", e);
+                    }
+                }
+            }.start();
+        } catch (Exception e) {
+            log.error("initWorkHttpHandler error: {}", e);
+        }
     }
 
     public void Stop() {
