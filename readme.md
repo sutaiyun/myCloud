@@ -45,3 +45,11 @@ http://xerces.apache.org/xerces-j/apiDocs/org/apache/xerces/utils/HexBin.html   
 java.lang.Object
   |
   +--org.apache.xerces.utils.HexBin
+###### fastJson   smartJson
+http://www.cnblogs.com/zhenjing/p/json-smart.html
+https://github.com/netplex/json-smart-v2
+
+######  Java 7中的TransferQueue
+http://ifeve.com/java-transfer-queue/
+http://www.68idc.cn/help/buildlang/java/2013081947502.html
+http://lawrence-zxc.github.io/2011/03/14/thread-blocking/   (add, put, take, offer, poll, drainTo)

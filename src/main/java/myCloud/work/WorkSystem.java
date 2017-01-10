@@ -2,6 +2,7 @@ package myCloud.work;
 
 import myCloud.common.AppConfig;
 import myCloud.common.MyDigest;
+import myCloud.common.msg.MyMsg;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +22,14 @@ public class WorkSystem {
         hello();
         workConfig.loadAppConfig("/../../config/application.properties");
         log.info("{} start ......", workConfig.appName);
+
+        WorkMsgQueProcess workMsgQueProcess = new WorkMsgQueProcess();
+        try {
+            workMsgQueProcess.start();
+        } catch (java.lang.Exception e) {
+            log.error("workMsgQueProcess.start Error. {}", e);
+        }
+        testSystem();
     }
 
     public void Stop() {
@@ -52,13 +61,41 @@ public class WorkSystem {
         log.info("");
     }
 
-    void testSystem() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    void testSystem() {
+        try {
+            testMyDigest();
+        } catch (NoSuchAlgorithmException e) {
+            log.error("testMyDigest Error:{}", e);
+        } catch (UnsupportedEncodingException e) {
+            log.error("UnsupportedEncodingException:{}", e);
+        }
+        log.info("work home: " + myCloud.common.Util.workHome());
+        testMsg();
+    }
+
+    private void testMyDigest() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         log.info("MD5(baidu): " + MyDigest.md5("baidu"));
         log.info("SHA(baidu): " + MyDigest.sha("baidu"));
         log.info("SHA-1(baidu): " + MyDigest.sha1("baidu"));
         log.info("MD5(百度): " + MyDigest.md5("百度"));
         log.info("SHA(百度): " + MyDigest.sha("百度"));
         log.info("SHA-1(百度): " + MyDigest.sha1("百度"));
-        log.info("work home: " + myCloud.common.Util.workHome());
+    }
+
+    private void testMsg() {
+        MyMsg msg = new MyMsg();
+        msg.setSerialNo("1");
+        msg.setMsgType("REQ");
+        msg.setMsgID("ffffffff");
+        msg.setMsgLen("0x12345678");
+        msg.setPayload("{}");
+
+        String jsonString = msg.encode();
+        log.info("jsongString:{}", jsonString);
+
+        MyMsg msg1 = new MyMsg();
+        msg1.decode(jsonString);
+        String jsonString1 = msg1.encode();
+        log.info("jsongString1:{}", jsonString1);
     }
 }
