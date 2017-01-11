@@ -25,7 +25,7 @@ public class WorkSystem {
         log.info("{} start ......", workConfig.appName);
 
         initWorkMsgQue();
-        //initWorkHttpHandler();
+        initWorkHttpHandler();
         initWorkWebServiceHandler();
 
         testSystem();

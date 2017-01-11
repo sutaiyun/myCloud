@@ -1,6 +1,7 @@
 package myCloud.common;
 
 import com.google.common.base.Strings;
+import myCloud.common.msg.MyMsg;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,7 +53,50 @@ public class CmdShell {
         if (cmd.equals("help") || cmd.equals("h") || cmd.equals("H") || cmd.equals("Help") || cmd.equals("?")) {
             Help();
         }
+
+        if (cmd.equals("client")) {
+            clientToServer(console);
+        }
+
         return exitProgram;
+    }
+
+    private void clientToServer(Console console) {
+        String hostCmd = console.readLine("[cmd shell]# input HOST(default:localhost):");
+        String portCmd = console.readLine("[cmd shell]# input PORT(default:8080):");
+
+        cmdShellLog.info("hostCmd {}", hostCmd);
+        if (hostCmd.equals("") || null == hostCmd || "\b\r" == hostCmd) {
+            hostCmd = "localhost";
+        }
+        if (portCmd.equals("") || null == portCmd || "\b\r" == portCmd) {
+            portCmd = "8080";
+        }
+
+        final String host = hostCmd;
+        final String port = portCmd;
+
+        try {
+            new Thread() {
+               public void run () {
+                   try {
+                       MyMsg msg = new MyMsg();
+                       msg.setSerialNo("1");
+                       msg.setMsgType("REQ");
+                       msg.setMsgID("ffffffff");
+                       msg.setMsgLen("0x12345678");
+                       msg.setPayload("{\"su\":\"xia\"");
+
+                       HttpClient httpClient = new HttpClient();
+                       httpClient.connect(host, Integer.parseInt(port), msg.encode());
+                   } catch (Exception e) {
+                       cmdShellLog.error("CmdShell>client error {}", e);
+                   }
+               }
+            }.start();
+        } catch (Exception e) {
+            cmdShellLog.error("CmdShell>client error {}", e);
+        }
     }
 
     private void Help() {

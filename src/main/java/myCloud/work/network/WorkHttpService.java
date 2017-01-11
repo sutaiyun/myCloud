@@ -9,6 +9,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import myCloud.common.msg.MyMsg;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,6 +82,13 @@ public class WorkHttpService {
             if (msg instanceof FullHttpRequest) {
                 log.info("req.headers:{}", ((FullHttpRequest) msg).headers());
                 log.info("req.contends:{}", ((FullHttpRequest) msg).content());
+                ByteBuf buf = ((FullHttpRequest)msg).content();
+                log.info("req.contents1: {}", buf.toString(io.netty.util.CharsetUtil.UTF_8));
+                //buf.release(); //can't release buf, it's content
+
+                MyMsg myMsg = new MyMsg();
+                myMsg.decode(buf.toString(io.netty.util.CharsetUtil.UTF_8));
+                log.info("myMsg are: {}", myMsg);
 
                 String resMsg = "This is test!!!!!!";
                 FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,

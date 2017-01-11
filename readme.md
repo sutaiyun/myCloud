@@ -59,3 +59,6 @@ http://blog.csdn.net/u011096030/article/details/14548211
 http://blog.csdn.net/stoneson/article/details/8073285  (websocket  协议)
 http://blog.csdn.net/mffandxx/article/details/52296306   Netty之HTTP协议开发
 http://www.infoq.com/cn/articles/netty-version-upgrade-history-thread-part   (netty 内存池问题）
+
+###### commons lang
+https://commons.apache.org/proper/commons-lang/
