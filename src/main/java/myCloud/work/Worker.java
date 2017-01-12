@@ -14,8 +14,8 @@ public class Worker {
         try {
             WorkSystem.instance.Start();
 
-            CmdShell cmdShell = new CmdShell();
-            cmdShell.Start();
+            WorkerCmdShell workerCmdShell = new WorkerCmdShell();
+            workerCmdShell.Start();
 
             WorkSystem.instance.Stop();
         } catch (Exception e) {

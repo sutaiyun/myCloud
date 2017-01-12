@@ -9,7 +9,7 @@ public class Manager {
     public static void main(String args[]) {
         System.out.print("This is Manager main!!!!!!");
 
-        CmdShell cmdShell = new CmdShell();
-        cmdShell.Start();
+        ManagerCmdShell managerCmdShell = new ManagerCmdShell();
+        managerCmdShell.Start();
     }
 }

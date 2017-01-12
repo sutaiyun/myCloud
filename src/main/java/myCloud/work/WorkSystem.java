@@ -15,7 +15,8 @@ import java.security.NoSuchAlgorithmException;
  */
 public class WorkSystem {
     private Logger log = LogManager.getLogger(WorkSystem.class);
-    WorkConfig workConfig = new WorkConfig();
+    public final static WorkerConfig workConfig = new WorkerConfig();
+    public final static WorkerMsgQueProcess workerMsgQueProcess = new WorkerMsgQueProcess();
 
     public static WorkSystem instance = new WorkSystem();
 
@@ -32,9 +33,8 @@ public class WorkSystem {
     }
 
     private void initWorkMsgQue() {
-        WorkMsgQueProcess workMsgQueProcess = new WorkMsgQueProcess();
         try {
-            workMsgQueProcess.start();
+            workerMsgQueProcess.start();
         } catch (Exception e) {
             log.error("workMsgQueProcess.start Error. {}", e);
         }

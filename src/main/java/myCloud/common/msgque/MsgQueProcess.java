@@ -12,15 +12,13 @@ import java.util.List;
  * Created by sutaiyun on 2017/1/9.
  */
 
-public class MsgQueProcess {
-    public static final Logger log = LogManager.getLogger(MsgQueProcess.class);
+public abstract class MsgQueProcess {
+    private static final Logger log = LogManager.getLogger(MsgQueProcess.class);
     protected MsgQue msgQue = null;
 
-    /*
     public MsgQueProcess(MsgQue msgQue) {
         this.msgQue = msgQue;
     }
-    */
 
     public int start() throws Exception {
         int threadNum = Runtime.getRuntime().availableProcessors() * 2;
@@ -63,7 +61,5 @@ public class MsgQueProcess {
         }
     }
 
-    private void process(MyMsg msg) {
-        log.info("msg:{}", msg);
-    }
+    protected abstract boolean process(MyMsg msg);
 }

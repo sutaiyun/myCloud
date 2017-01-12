@@ -10,6 +10,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import myCloud.common.msg.MyMsg;
+import myCloud.work.WorkMsgQue;
+import myCloud.work.WorkSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -90,7 +92,12 @@ public class WorkHttpService {
                 myMsg.decode(buf.toString(io.netty.util.CharsetUtil.UTF_8));
                 log.info("myMsg are: {}", myMsg);
 
-                String resMsg = "This is test!!!!!!";
+                String resMsg = "Msg Process Error!";
+                if (WorkMsgQue.instance.add(myMsg) == true)
+                {
+                    resMsg = "Msg Process OK!";
+                }
+
                 FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
                         OK, Unpooled.wrappedBuffer(resMsg.getBytes("UTF-8")));
                 response.headers().set(CONTENT_TYPE, "text/plain");

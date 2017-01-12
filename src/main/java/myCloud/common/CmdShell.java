@@ -10,7 +10,7 @@ import java.io.Console;
 /**
  * Created by sutaiyun on 2017/1/6.
  */
-public class CmdShell {
+abstract public class CmdShell {
     //private static final Logger cmdShellLog = LogManager.getLogger(CmdShell.class);
     private static final Logger cmdShellLog = LogManager.getLogger("CmdShell");
     Console console = null;
@@ -26,6 +26,8 @@ public class CmdShell {
             if (cmdProcess(console, cmd)) return;
         }
     }
+
+    protected abstract boolean cmdProcessChild(Console console, String cmd);
 
     private boolean cmdProcess(Console console, String cmd) {
         Boolean exitProgram = false;
@@ -57,6 +59,8 @@ public class CmdShell {
         if (cmd.equals("client")) {
             clientToServer(console);
         }
+
+        exitProgram = cmdProcessChild (console, cmd);
 
         return exitProgram;
     }
