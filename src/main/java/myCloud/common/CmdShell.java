@@ -3,6 +3,7 @@ package myCloud.common;
 import com.google.common.base.Strings;
 import myCloud.common.msg.MyMsg;
 import myCloud.common.msg.MyMsgID;
+import myCloud.common.msg.MyRequestMsg;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -85,12 +86,7 @@ abstract public class CmdShell {
             new Thread() {
                public void run () {
                    try {
-                       MyMsg msg = new MyMsg();
-                       msg.setSerialNo(Util.getSerialNo());
-                       msg.setMsgType(MyMsg.REQUEST_TYPE);
-                       msg.setMsgID(MyMsgID.MY_REQUEST);
-                       msg.setMsgLen(0x12345678);
-                       msg.setPayload("{\"su\":\"xia\"");
+                       MyMsg msg = new MyRequestMsg(MyMsgID.MY_REQUEST, MyMsgID.MY_MSG_VER_1, "{\"su\":\"xia\"");
 
                        HttpClient httpClient = new HttpClient();
                        httpClient.connect(host, Integer.parseInt(port), msg.encode());

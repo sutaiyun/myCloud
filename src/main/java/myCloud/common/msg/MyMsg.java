@@ -20,9 +20,21 @@ public class MyMsg {
     private Integer serialNo;
     private Integer msgType;
     private Integer msgID;
-    private Integer msgLen;
+    private Integer msgLen;    //don't use now!
+    private String msgVersion;
     private String payload;
     //private String msgRaw;  //include serialNo + mygType + msgID + msgLen + payload
+
+    public MyMsg() {
+    }
+
+    public MyMsg(Integer serialNo, Integer msgType, Integer msgID, String msgVersion, String payload) {
+        this.serialNo = serialNo;
+        this.msgType = msgType;
+        this.msgID = msgID;
+        this.msgVersion = msgVersion;
+        this.payload = payload;
+    }
 
     Integer getSerialNo() {
         return this.serialNo;
@@ -56,6 +68,14 @@ public class MyMsg {
         this.msgLen = msgLen;
     }
 
+    public String getMsgVersion() {
+        return this.msgVersion;
+    }
+
+    public void setMsgVersion(String msgVersion) {
+        this.msgVersion = msgVersion;
+    }
+
     public String getPayload() {
        return this.payload;
     }
@@ -85,6 +105,17 @@ public class MyMsg {
         return jObject.toString();
     }
 
+    protected JSONObject encodeJson() {
+        JSONObject jObject = new JSONObject();
+        if (null != serialNo) jObject.put("SNO", this.serialNo);
+        if (null != msgType) jObject.put("MSG_TYPE", this.msgType);
+        if (null != msgID) jObject.put("MSG_ID", this.msgID);
+        if (null != msgLen) jObject.put("MSG_LEN", this.msgLen);
+        if (null != payload) jObject.put("PAYLOAD", this.payload);
+
+        return jObject;
+    }
+
     public void decode(String raw) {
         try {
             JSONObject jsonObject = (JSONObject) JSONValue.parseWithException(raw);
@@ -105,12 +136,7 @@ public class MyMsg {
     }
 
     public static void main(String args[]) {
-        MyMsg msg = new MyMsg();
-        msg.setSerialNo(1);
-        msg.setMsgType(1);
-        msg.setMsgID(0xffffffff);
-        msg.setMsgLen(0x12345678);
-        msg.setPayload("{}");
+        MyMsg msg = new MyMsg(1, 1, 0xffffffff, "1.1.1", "{}");
 
         String jsonString = msg.encode();
         log.info("jsongString:{}", jsonString);
