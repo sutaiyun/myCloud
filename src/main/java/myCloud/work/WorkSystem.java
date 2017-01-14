@@ -2,6 +2,7 @@ package myCloud.work;
 
 import myCloud.common.MyDigest;
 import myCloud.common.msg.MyMsg;
+import myCloud.common.msg.MyMsgID;
 import myCloud.work.network.WorkHttpService;
 import myCloud.work.network.WorkWebService;
 import org.apache.logging.log4j.LogManager;
@@ -126,10 +127,10 @@ public class WorkSystem {
 
     private void testMsg() {
         MyMsg msg = new MyMsg();
-        msg.setSerialNo("1");
-        msg.setMsgType("REQ");
-        msg.setMsgID("ffffffff");
-        msg.setMsgLen("0x12345678");
+        msg.setSerialNo(myCloud.common.Util.getSerialNo());
+        msg.setMsgType(MyMsg.REQUEST_TYPE);
+        msg.setMsgID(MyMsgID.MY_REQUEST);
+        msg.setMsgLen(0x12345678);
         msg.setPayload("{}");
 
         String jsonString = msg.encode();

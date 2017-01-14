@@ -17,51 +17,62 @@ public class MyMsg {
     public static int RESPONSE_TYPE = 1;
     public static int UNKNOWN_TYPE = 2;
 
-    private String serialNo;
-    private String msgType;
-    private String msgID;
-    private String msgLen;
+    private Integer serialNo;
+    private Integer msgType;
+    private Integer msgID;
+    private Integer msgLen;
     private String payload;
+    //private String msgRaw;  //include serialNo + mygType + msgID + msgLen + payload
 
-    String getSerialNo() {
+    Integer getSerialNo() {
         return this.serialNo;
     }
 
-    public void setSerialNo(String serialNo) {
+    public void setSerialNo(Integer serialNo) {
         this.serialNo = serialNo;
     }
 
-    public String getMsgType() {
+    public Integer getMsgType() {
         return this.msgType;
     }
 
-    public void setMsgType(String msgType) {
+    public void setMsgType(Integer msgType) {
         this.msgType = msgType;
     }
 
-    public String getMsgID() {
+    public Integer getMsgID() {
         return this.msgID;
     }
 
-    public void setMsgID(String msgID) {
+    public void setMsgID(Integer msgID) {
         this.msgID = msgID;
     }
 
-    public String getMsgLen() {
+    public Integer getMsgLen() {
         return this.msgLen;
     }
 
-    public void setMsgLen(String msgLen) {
+    public void setMsgLen(Integer msgLen) {
         this.msgLen = msgLen;
     }
 
     public String getPayload() {
-        return this.payload;
+       return this.payload;
     }
 
     public void setPayload(String payload) {
         this.payload = payload;
     }
+
+    /*
+    public String getMsgRaw() {
+        return this.msgRaw;
+    }
+
+    public void setMsgRaw(String rawMsg) {
+        this.msgRaw = rawMsg;
+    }
+    */
 
     public String encode() {
         JSONObject jObject = new JSONObject();
@@ -78,10 +89,10 @@ public class MyMsg {
         try {
             JSONObject jsonObject = (JSONObject) JSONValue.parseWithException(raw);
 
-            this.serialNo = (String) jsonObject.get("SNO");
-            this.msgType = (String) jsonObject.get("MSG_TYPE");
-            this.msgID = (String) jsonObject.get("MSG_ID");
-            this.msgLen = (String) jsonObject.get("MSG_LEN");
+            this.serialNo = (Integer) jsonObject.get("SNO");
+            this.msgType = (Integer) jsonObject.get("MSG_TYPE");
+            this.msgID = (Integer) jsonObject.get("MSG_ID");
+            this.msgLen = (Integer) jsonObject.get("MSG_LEN");
             this.payload = (String) jsonObject.get("PAYLOAD");
         } catch (ParseException e) {
             log.error("MyMsg.decode Error: {}", e);
@@ -95,10 +106,10 @@ public class MyMsg {
 
     public static void main(String args[]) {
         MyMsg msg = new MyMsg();
-        msg.setSerialNo("1");
-        msg.setMsgType("REQ");
-        msg.setMsgID("ffffffff");
-        msg.setMsgLen("0x12345678");
+        msg.setSerialNo(1);
+        msg.setMsgType(1);
+        msg.setMsgID(0xffffffff);
+        msg.setMsgLen(0x12345678);
         msg.setPayload("{}");
 
         String jsonString = msg.encode();
