@@ -101,6 +101,7 @@ public class MyMsg {
         if (null != msgID) jObject.put("MSG_ID", this.msgID);
         if (null != msgLen) jObject.put("MSG_LEN", this.msgLen);
         if (null != payload) jObject.put("PAYLOAD", this.payload);
+        if (null != msgVersion) jObject.put("VERSION", this.msgVersion);
 
         return jObject.toString();
     }
@@ -112,6 +113,7 @@ public class MyMsg {
         if (null != msgID) jObject.put("MSG_ID", this.msgID);
         if (null != msgLen) jObject.put("MSG_LEN", this.msgLen);
         if (null != payload) jObject.put("PAYLOAD", this.payload);
+        if (null != msgVersion) jObject.put("VERSION", this.msgVersion);
 
         return jObject;
     }
@@ -125,6 +127,7 @@ public class MyMsg {
             this.msgID = (Integer) jsonObject.get("MSG_ID");
             this.msgLen = (Integer) jsonObject.get("MSG_LEN");
             this.payload = (String) jsonObject.get("PAYLOAD");
+            this.msgVersion = (String) jsonObject.get("VERSION");
         } catch (ParseException e) {
             log.error("MyMsg.decode Error: {}", e);
         }

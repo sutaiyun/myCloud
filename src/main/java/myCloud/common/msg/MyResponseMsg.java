@@ -14,6 +14,10 @@ public class MyResponseMsg extends MyMsg {
     private Integer result;
     private String resultString;
 
+    public MyResponseMsg() {
+        super();
+    }
+
     public MyResponseMsg(Integer myMsgID, String msgVersion, Integer result, String resultString, String payload) {
         super(Util.getSerialNo(), MyMsg.RESPONSE_TYPE, myMsgID, msgVersion, payload);
 

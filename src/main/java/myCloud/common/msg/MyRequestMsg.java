@@ -6,6 +6,10 @@ import myCloud.common.Util;
  * Created by sutaiyun on 2017/1/8.
  */
 public class MyRequestMsg extends MyMsg {
+    public MyRequestMsg (){
+        super();
+    }
+
     public MyRequestMsg(Integer myMsgID, String msgVersion, String payload) {
         super(Util.getSerialNo(), MyMsg.REQUEST_TYPE, myMsgID, msgVersion, payload);
     }

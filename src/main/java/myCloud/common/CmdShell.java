@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import myCloud.common.msg.MyMsg;
 import myCloud.common.msg.MyMsgID;
 import myCloud.common.msg.MyRequestMsg;
+import myCloud.common.msg.MyResponseMsg;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,8 +59,14 @@ abstract public class CmdShell {
             Help();
         }
 
-        if (cmd.equals("client")) {
-            clientToServer(console);
+        if (cmd.equals("clientReq")) {
+            boolean isRequest = true;
+            clientToServer(console, isRequest);
+        }
+
+        if (cmd.equals("clientRsp")) {
+            boolean isResponse = false;
+            clientToServer(console, isResponse);
         }
 
         exitProgram = cmdProcessChild (console, cmd);
@@ -67,7 +74,7 @@ abstract public class CmdShell {
         return exitProgram;
     }
 
-    private void clientToServer(Console console) {
+    private void clientToServer(Console console, final boolean isRequest) {
         String hostCmd = console.readLine("[cmd shell]# input HOST(default:localhost):");
         String portCmd = console.readLine("[cmd shell]# input PORT(default:8080):");
 
@@ -86,10 +93,20 @@ abstract public class CmdShell {
             new Thread() {
                public void run () {
                    try {
-                       MyMsg msg = new MyRequestMsg(MyMsgID.MY_REQUEST, MyMsgID.MY_MSG_VER_1, "{\"su\":\"xia\"");
+                       String sendString;
+                       int type ;
 
+                       if (isRequest) {
+                           MyRequestMsg msg = new MyRequestMsg(MyMsgID.MY_REQUEST, MyMsgID.MY_MSG_VER_1, "{\"su\":\"xia\"");
+                           sendString = msg.encode();
+                           type = MyMsg.REQUEST_TYPE;
+                       } else {
+                           MyResponseMsg msg = new MyResponseMsg(MyMsgID.MY_RESPONSE, MyMsgID.MY_MSG_VER_1, 0, "OK!", "{\"su\":\"xia\"");
+                           sendString = msg.encode();
+                           type = MyMsg.RESPONSE_TYPE;
+                       }
                        HttpClient httpClient = new HttpClient();
-                       httpClient.connect(host, Integer.parseInt(port), msg.encode());
+                       httpClient.connect(host, Integer.parseInt(port), String.valueOf(type) + sendString);
                    } catch (Exception e) {
                        cmdShellLog.error("CmdShell>client error {}", e);
                    }
@@ -105,6 +122,8 @@ abstract public class CmdShell {
         System.out.println("CMD list:                                           ");
         System.out.println("    help, h, Help, ?    :    user help              ");
         System.out.println("    Stop                :    Stop System            ");
+        System.out.println("    clientReq           :    Send MyRequestMsg      ");
+        System.out.println("    clientRsp           :    Send MyResponseMsg     ");
         System.out.println("****************************************************");
     }
 }

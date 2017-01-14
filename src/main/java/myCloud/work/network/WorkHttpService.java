@@ -10,6 +10,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import myCloud.common.msg.MyMsg;
+import myCloud.common.msg.MyRequestMsg;
+import myCloud.common.msg.MyResponseMsg;
 import myCloud.work.WorkMsgQue;
 import myCloud.work.WorkSystem;
 import org.apache.logging.log4j.LogManager;
@@ -87,16 +89,24 @@ public class WorkHttpService {
                 ByteBuf buf = ((FullHttpRequest)msg).content();
                 log.info("req.contents1: {}", buf.toString(io.netty.util.CharsetUtil.UTF_8));
                 //buf.release(); //can't release buf, it's content
-
-                MyMsg myMsg = new MyMsg();
-                myMsg.decode(buf.toString(io.netty.util.CharsetUtil.UTF_8));
-                log.info("myMsg are: {}", myMsg);
-
                 String resMsg = "Msg Process Error!";
-                if (WorkMsgQue.instance.add(myMsg) == true)
-                {
-                    resMsg = "Msg Process OK!";
+                int msgType = buf.readByte() - '0';
+                if (msgType == MyMsg.REQUEST_TYPE) {
+                    MyRequestMsg myRequestMsg = new MyRequestMsg();
+                    myRequestMsg.decode(buf.toString(io.netty.util.CharsetUtil.UTF_8));
+                    if (WorkMsgQue.instance.add(myRequestMsg) == true)
+                    {
+                        resMsg = "RequestMsg Process OK!";
+                    }
+                } else if (msgType == MyMsg.RESPONSE_TYPE) {
+                    MyResponseMsg myResponseMsg = new MyResponseMsg();
+                    myResponseMsg.decode(buf.toString(io.netty.util.CharsetUtil.UTF_8));
+                    if (WorkMsgQue.instance.add(myResponseMsg) == true)
+                    {
+                        resMsg = "ResponseMsg Process OK!";
+                    }
                 }
+
 
                 FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
                         OK, Unpooled.wrappedBuffer(resMsg.getBytes("UTF-8")));
