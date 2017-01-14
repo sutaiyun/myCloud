@@ -69,9 +69,48 @@ abstract public class CmdShell {
             clientToServer(console, isResponse);
         }
 
+        if (cmd.equals("testClientFlow")) {
+            testClientFlow(console);
+        }
+
         exitProgram = cmdProcessChild (console, cmd);
 
         return exitProgram;
+    }
+
+    private void testClientFlow(Console console) {
+        String hostCmd = console.readLine("[cmd shell]# input HOST(default:localhost):");
+        String portCmd = console.readLine("[cmd shell]# input PORT(default:8080):");
+        cmdShellLog.info("hostCmd {}", hostCmd);
+        if (hostCmd.equals("") || null == hostCmd || "\b\r" == hostCmd) {
+            hostCmd = "localhost";
+        }
+        if (portCmd.equals("") || null == portCmd || "\b\r" == portCmd) {
+            portCmd = "8080";
+        }
+        int type = MyMsg.REQUEST_TYPE;
+        MyRequestMsg msg = new MyRequestMsg(MyMsgID.MY_REQUEST,
+                                    MyMsgID.MY_MSG_VER_1,
+                                    "{\"su\":\"xia\"");
+        String sendString = msg.encode();
+        clientToServer(console, hostCmd, portCmd, type, sendString);
+    }
+
+    private void clientToServer(Console console, final String host, final String port, final int type, final String msg) {
+        try {
+            new Thread() {
+                public void run () {
+                    try {
+                        HttpClient httpClient = new HttpClient();
+                        httpClient.connect(host, Integer.parseInt(port), String.valueOf(type) + msg);
+                    } catch (Exception e) {
+                        cmdShellLog.error("CmdShell>client error {}", e);
+                    }
+                }
+            }.start();
+        } catch (Exception e) {
+            cmdShellLog.error("CmdShell>client error {}", e);
+        }
     }
 
     private void clientToServer(Console console, final boolean isRequest) {
