@@ -79,10 +79,11 @@ public class WorkWebService {
         public void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
             log.info("messageReceived: XXXXXXXX XXXXXKXXX XXXXXXXX XXXXXXXX");
             if (msg instanceof FullHttpRequest) {
-                log.info("req.headers:{}", ((FullHttpRequest) msg).headers());
-                log.info("req.contends:{}", ((FullHttpRequest) msg).content());
+                log.info("req.headers:-------- {}", ((FullHttpRequest) msg).headers().names());
+                log.info("req.header.values:-------- {}", ((FullHttpRequest) msg).headers().entries());
+                //log.info("req.contends:{}", ((FullHttpRequest) msg).content());
                 ByteBuf buf = ((FullHttpRequest)msg).content();
-                log.info("req.contents1: {}", buf.toString(io.netty.util.CharsetUtil.UTF_8));
+                log.info("req.contents: {}", buf.toString(io.netty.util.CharsetUtil.UTF_8));
                 //buf.release();  //can't release but, it's content.
 
                 String resMsg = "This is test!!!!!!";

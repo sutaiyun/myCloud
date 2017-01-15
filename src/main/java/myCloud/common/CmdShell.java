@@ -5,6 +5,7 @@ import myCloud.common.msg.MyMsg;
 import myCloud.common.msg.MyMsgID;
 import myCloud.common.msg.MyRequestMsg;
 import myCloud.common.msg.MyResponseMsg;
+import net.minidev.json.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -89,9 +90,11 @@ abstract public class CmdShell {
             portCmd = "8080";
         }
         int type = MyMsg.REQUEST_TYPE;
+        //JSONObject payload;
+        String payloadString = "{\"su\":\"xia\"";
         MyRequestMsg msg = new MyRequestMsg(MyMsgID.MY_REQUEST,
-                                    MyMsgID.MY_MSG_VER_1,
-                                    "{\"su\":\"xia\"");
+                                            MyMsgID.MY_MSG_VER_1,
+                                            payloadString);
         String sendString = msg.encode();
         clientToServer(console, hostCmd, portCmd, type, sendString);
     }
